@@ -1,0 +1,16 @@
+{
+  "group-pull-request-title-pattern": "release v${version}",
+  "include-component-in-tag": false,
+  "packages": {
+    ".": {
+      "release-type": "python",
+      "extra-files": [
+        {
+          "type": "json",
+          "path": "custom_components/lighting_zone/manifest.json",
+          "jsonpath": "$.version"
+        }
+      ]
+    }
+  }
+}

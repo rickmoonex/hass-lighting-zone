@@ -1,0 +1,35 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "description": "Set up a new lighting zone",
+                "data": {
+                    "name": "Name",
+                    "members": "Member lights"
+                }
+            }
+        }
+    },
+    "services": {
+        "dim_zone_absolute": {
+            "name": "Dim Zone Absolute",
+            "description": "Dim all the lights in a specific zone to an absolute value.",
+            "fields": {
+                "dim_level": {
+                    "name": "Dim level",
+                    "description": "The level to dim to."
+                }
+            }
+        },
+        "dim_zone_relative": {
+            "name": "Dim Zone Relative",
+            "description": "Dim all the lights in a specific zone to a value relative to their current value.",
+            "fields": {
+                "amount": {
+                    "name": "Amount",
+                    "description": "The amount of dimming that's needed. Can be positive or negative."
+                }
+            }
+        }
+    }
+}

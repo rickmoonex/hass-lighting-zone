@@ -1,0 +1,6 @@
+{
+    "services": {
+        "dim_zone_absolute": {"service": "mdi:lightbulb-auto"},
+        "dim_zone_relative": {"service": "mdi:lightbulb-group"}
+    }
+}

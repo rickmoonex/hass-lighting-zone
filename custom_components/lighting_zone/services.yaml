@@ -1,0 +1,29 @@
+dim_zone_absolute:
+    target:
+        entity:
+            domain: binary_sensor
+            integration: lighting_zone
+    fields:
+        dim_level:
+            required: true
+            default: 50
+            selector:
+                number:
+                    min: 0
+                    max: 100
+
+dim_zone_relative:
+    target:
+        entity:
+            domain: binary_sensor
+            integration: lighting_zone
+    fields:
+        amount:
+            required: true
+            default: -10
+            selector:
+                number:
+                    min: -100
+                    max: 100
+
+reload:

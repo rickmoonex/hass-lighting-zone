@@ -1,0 +1,12 @@
+{
+  "domain": "lighting_zone",
+  "name": "Lighting Zone",
+  "codeowners": [
+    "@rickmoonex"
+  ],
+  "config_flow": true,
+  "integration_type": "helper",
+  "documentation": "https://github.com/rickmoonex/hass-lighting-zone",
+  "issue_tracker": "https://github.com/rickmoonex/hass-lighting-zone/issues",
+  "version": "0.1.0"
+}

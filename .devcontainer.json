@@ -45,5 +45,8 @@
                 "libpcap-dev"
             ]
         }
-    }
+    },
+    "mounts": [
+        "type=bind,source=${localEnv:HOME}/.ssh,target=/root/.ssh,readonly",
+    ]
 }

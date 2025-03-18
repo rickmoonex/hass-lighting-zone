@@ -1,13 +1,13 @@
 {
-  "domain": "lighting_zone",
-  "name": "Lighting Zone",
   "codeowners": [
     "@rickmoonex"
   ],
   "config_flow": true,
+  "documentation": "https://github.com/rickmoonex/hass-lighting-zone",
+  "domain": "lighting_zone",
   "integration_type": "helper",
   "iot_class": "calculated",
-  "documentation": "https://github.com/rickmoonex/hass-lighting-zone",
   "issue_tracker": "https://github.com/rickmoonex/hass-lighting-zone/issues",
+  "name": "Lighting Zone",
   "version": "0.1.0"
 }

@@ -6,6 +6,7 @@
   ],
   "config_flow": true,
   "integration_type": "helper",
+  "iot_class": "calculated",
   "documentation": "https://github.com/rickmoonex/hass-lighting-zone",
   "issue_tracker": "https://github.com/rickmoonex/hass-lighting-zone/issues",
   "version": "0.1.0"

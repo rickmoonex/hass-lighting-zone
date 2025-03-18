@@ -1,0 +1,55 @@
+name: Release integration
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  hassfest: # https://developers.home-assistant.io/blog/2020/04/16/hassfest
+    name: "Hassfest Validation"
+    runs-on: "ubuntu-latest"
+    steps:
+        - name: "Checkout the repository"
+          uses: "actions/checkout@v4.2.2"
+
+        - name: "Run hassfest validation"
+          uses: "home-assistant/actions/hassfest@master"
+
+  hacs: # https://github.com/hacs/action
+    name: "HACS Validation"
+    runs-on: "ubuntu-latest"
+    steps:
+        - name: "Checkout the repository"
+          uses: "actions/checkout@v4.2.2"
+
+        - name: "Run HACS validation"
+          uses: "hacs/action@main"
+          with:
+            category: "integration"
+            # Remove this 'ignore' key when you have added brand images for your integration to https://github.com/home-assistant/brands
+            ignore: "brands"
+
+  release:
+    name: Release
+    needs:
+      - hassfest
+      - hacs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: googleapis/release-please-action@v4
+        id: release
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v4
+        if: ${{ steps.release.outputs.release_created }}
+      - name: Create zip
+        if: ${{ steps.release.outputs.release_created }}
+        run: |
+          cd ${{ github.workspace }}/custom_components/lighting_zone
+          zip lighting_zone.zip -r ./
+      - name: Upload release
+        if: ${{ steps.release.outputs.release_created }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload ${{ steps.release.outputs.tag_name }} ${{ github.workspace }}/custom_components/lighting_zone/lighting_zone.zip

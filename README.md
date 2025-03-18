@@ -37,6 +37,10 @@ These attributes can be used in automation.
 
 **For example:** I have a button on the wall that I want to use for toggling on/off the lights in a specific zone. I can use the state of the binary sensor to termine if the lights are on or off and act accordingly. Or I can use the `members_on` and `members_off` atributes to determine how many lights are on. And then act on that.
 
+## Installation
+
+**TO BE ADDED**
+
 ## Support
 
 If you find this project helpful and want to support its development, consider buying me a coffee!

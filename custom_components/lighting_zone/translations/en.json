@@ -13,21 +13,29 @@
     "services": {
         "dim_zone_absolute": {
             "name": "Dim Zone Absolute",
-            "description": "Dim all the lights in a specific zone to an absolute value.",
+            "description": "Dim all the lights in a specific zone to an absolute value",
             "fields": {
-                "dim_level": {
-                    "name": "Dim level",
-                    "description": "The level to dim to."
+                "brightness": {
+                    "name": "Brightness",
+                    "description": "The brightness to set"
+                },
+                "brightness_pct": {
+                    "name": "Brightness percentage",
+                    "description": "The brightness to set in percentage"
                 }
             }
         },
         "dim_zone_relative": {
             "name": "Dim Zone Relative",
-            "description": "Dim all the lights in a specific zone to a value relative to their current value.",
+            "description": "Dim all the lights in a specific zone to a value relative to their current value",
             "fields": {
-                "amount": {
-                    "name": "Amount",
-                    "description": "The amount of dimming that's needed. Can be positive or negative."
+                "brightness_step": {
+                    "name": "Brightness step",
+                    "description": "The amount of dimming that's needed. Can be positive or negative"
+                },
+                "brightness_step_pct": {
+                    "name": "Brightness step percentage",
+                    "description": "The amount of dimming that's needed in percentage. Can be positive or negative"
                 }
             }
         }

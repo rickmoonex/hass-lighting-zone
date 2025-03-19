@@ -76,12 +76,12 @@ async def async_setup_entry(
     platform = async_get_current_platform()
     platform.async_register_entity_service(
         SERVICE_DIM_ZONE_ABSOLUTE,
-        {**SERVICE_DIM_ZONE_ABSOLUTE_SCHEMA},
+        cv.make_entity_service_schema(SERVICE_DIM_ZONE_ABSOLUTE_SCHEMA),
         "dim_zone_absolute",
     )
     platform.async_register_entity_service(
         SERVICE_DIM_ZONE_RELATIVE,
-        {**SERVICE_DIM_ZONE_RELATIVE_SCHEMA},
+        cv.make_entity_service_schema(SERVICE_DIM_ZONE_RELATIVE_SCHEMA),
         "dim_zone_relative",
     )
 
@@ -169,22 +169,42 @@ class LightingZone(BinarySensorEntity):
         else:
             self._attr_is_on = any(state == STATE_ON for state in states)
 
-    async def dim_zone_absolute(self, dim_level: int) -> None:
+    async def dim_zone_absolute(
+        self, brightness: int | None = None, brightness_pct: int | None = None
+    ) -> None:
         """Dim zone."""
         for member in self.members:
-            await self.hass.services.async_call(
-                LIGHT_DOMAIN,
-                SERVICE_TURN_ON,
-                {"brightness_pct": dim_level},
-                target={"entity_id": member},
-            )
+            if brightness_pct is not None:
+                await self.hass.services.async_call(
+                    LIGHT_DOMAIN,
+                    SERVICE_TURN_ON,
+                    {"brightness_pct": brightness_pct},
+                    target={"entity_id": member},
+                )
+            else:
+                await self.hass.services.async_call(
+                    LIGHT_DOMAIN,
+                    SERVICE_TURN_ON,
+                    {"brightness": brightness},
+                    target={"entity_id": member},
+                )
 
-    async def dim_zone_relative(self, amount: int) -> None:
+    async def dim_zone_relative(
+        self, brightness_step: int | None = None, brightness_step_pct: int | None = None
+    ) -> None:
         """Dim zone."""
         for member in self.members:
-            await self.hass.services.async_call(
-                LIGHT_DOMAIN,
-                SERVICE_TURN_ON,
-                {"brightness_step_pct": amount},
-                target={"entity_id": member},
-            )
+            if brightness_step_pct is not None:
+                await self.hass.services.async_call(
+                    LIGHT_DOMAIN,
+                    SERVICE_TURN_ON,
+                    {"brightness_step_pct": brightness_step_pct},
+                    target={"entity_id": member},
+                )
+            else:
+                await self.hass.services.async_call(
+                    LIGHT_DOMAIN,
+                    SERVICE_TURN_ON,
+                    {"brightness_step": brightness_step},
+                    target={"entity_id": member},
+                )

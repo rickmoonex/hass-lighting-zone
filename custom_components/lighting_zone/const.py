@@ -1,8 +1,17 @@
 """Constants for Lighing Zone."""
 
 import voluptuous as vol
+from homeassistant.components.light import (
+    ATTR_BRIGHTNESS,
+    ATTR_BRIGHTNESS_PCT,
+    ATTR_BRIGHTNESS_STEP,
+    ATTR_BRIGHTNESS_STEP_PCT,
+    VALID_BRIGHTNESS,
+    VALID_BRIGHTNESS_PCT,
+    VALID_BRIGHTNESS_STEP,
+    VALID_BRIGHTNESS_STEP_PCT,
+)
 from homeassistant.const import Platform
-from homeassistant.helpers import config_validation as cv
 
 DOMAIN = "lighting_zone"
 
@@ -11,9 +20,15 @@ PLATFORMS = [Platform.BINARY_SENSOR]
 CONF_MEMBERS = "members"
 
 SERVICE_DIM_ZONE_ABSOLUTE = "dim_zone_absolute"
-FIELD_DIM_LEVEL = "dim_level"
-SERVICE_DIM_ZONE_ABSOLUTE_SCHEMA = {vol.Required(FIELD_DIM_LEVEL): cv.positive_int}
+SERVICE_DIM_ZONE_ABSOLUTE_SCHEMA = {
+    vol.Exclusive(ATTR_BRIGHTNESS, ATTR_BRIGHTNESS): VALID_BRIGHTNESS,
+    vol.Exclusive(ATTR_BRIGHTNESS_PCT, ATTR_BRIGHTNESS): VALID_BRIGHTNESS_PCT,
+}
 
 SERVICE_DIM_ZONE_RELATIVE = "dim_zone_relative"
-FIELD_AMOUNT = "amount"
-SERVICE_DIM_ZONE_RELATIVE_SCHEMA = {vol.Required(FIELD_AMOUNT): int}
+SERVICE_DIM_ZONE_RELATIVE_SCHEMA = {
+    vol.Exclusive(ATTR_BRIGHTNESS_STEP, ATTR_BRIGHTNESS_STEP): VALID_BRIGHTNESS_STEP,
+    vol.Exclusive(
+        ATTR_BRIGHTNESS_STEP_PCT, ATTR_BRIGHTNESS_STEP
+    ): VALID_BRIGHTNESS_STEP_PCT,
+}

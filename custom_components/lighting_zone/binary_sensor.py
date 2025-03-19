@@ -20,6 +20,7 @@ from homeassistant.const import (
     CONF_UNIQUE_ID,
     EVENT_HOMEASSISTANT_START,
     SERVICE_TURN_ON,
+    STATE_OFF,
     STATE_ON,
     STATE_UNAVAILABLE,
     STATE_UNKNOWN,
@@ -76,12 +77,12 @@ async def async_setup_entry(
     platform = async_get_current_platform()
     platform.async_register_entity_service(
         SERVICE_DIM_ZONE_ABSOLUTE,
-        {**SERVICE_DIM_ZONE_ABSOLUTE_SCHEMA},
+        cv.make_entity_service_schema(SERVICE_DIM_ZONE_ABSOLUTE_SCHEMA),
         "dim_zone_absolute",
     )
     platform.async_register_entity_service(
         SERVICE_DIM_ZONE_RELATIVE,
-        {**SERVICE_DIM_ZONE_RELATIVE_SCHEMA},
+        cv.make_entity_service_schema(SERVICE_DIM_ZONE_RELATIVE_SCHEMA),
         "dim_zone_relative",
     )
 
@@ -157,6 +158,18 @@ class LightingZone(BinarySensorEntity):
             for entity_id in self.members
             if (state := self.hass.states.get(entity_id)) is not None
         ]
+        on_members = [
+            entity_id
+            for entity_id in self.members
+            if (state := self.hass.states.get(entity_id)) is not None
+            and state.state == STATE_ON
+        ]
+        off_members = [
+            entity_id
+            for entity_id in self.members
+            if (state := self.hass.states.get(entity_id)) is not None
+            and state.state == STATE_OFF
+        ]
 
         # Set group as unavailable if all members are unavailable or missing
         self._attr_available = any(state != STATE_UNAVAILABLE for state in states)
@@ -168,23 +181,48 @@ class LightingZone(BinarySensorEntity):
             self._attr_is_on = None
         else:
             self._attr_is_on = any(state == STATE_ON for state in states)
+            self._attr_extra_state_attributes = {
+                "members": self.members,
+                "members_on": on_members,
+                "members_off": off_members,
+            }
 
-    async def dim_zone_absolute(self, dim_level: int) -> None:
+    async def dim_zone_absolute(
+        self, brightness: int | None = None, brightness_pct: int | None = None
+    ) -> None:
         """Dim zone."""
         for member in self.members:
-            await self.hass.services.async_call(
-                LIGHT_DOMAIN,
-                SERVICE_TURN_ON,
-                {"brightness_pct": dim_level},
-                target={"entity_id": member},
-            )
+            if brightness_pct is not None:
+                await self.hass.services.async_call(
+                    LIGHT_DOMAIN,
+                    SERVICE_TURN_ON,
+                    {"brightness_pct": brightness_pct},
+                    target={"entity_id": member},
+                )
+            else:
+                await self.hass.services.async_call(
+                    LIGHT_DOMAIN,
+                    SERVICE_TURN_ON,
+                    {"brightness": brightness},
+                    target={"entity_id": member},
+                )
 
-    async def dim_zone_relative(self, amount: int) -> None:
+    async def dim_zone_relative(
+        self, brightness_step: int | None = None, brightness_step_pct: int | None = None
+    ) -> None:
         """Dim zone."""
         for member in self.members:
-            await self.hass.services.async_call(
-                LIGHT_DOMAIN,
-                SERVICE_TURN_ON,
-                {"brightness_step_pct": amount},
-                target={"entity_id": member},
-            )
+            if brightness_step_pct is not None:
+                await self.hass.services.async_call(
+                    LIGHT_DOMAIN,
+                    SERVICE_TURN_ON,
+                    {"brightness_step_pct": brightness_step_pct},
+                    target={"entity_id": member},
+                )
+            else:
+                await self.hass.services.async_call(
+                    LIGHT_DOMAIN,
+                    SERVICE_TURN_ON,
+                    {"brightness_step": brightness_step},
+                    target={"entity_id": member},
+                )

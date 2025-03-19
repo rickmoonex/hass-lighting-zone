@@ -4,9 +4,13 @@ dim_zone_absolute:
             domain: binary_sensor
             integration: lighting_zone
     fields:
-        dim_level:
-            required: true
+        brightness:
             default: 50
+            selector:
+                number:
+                    min: 0
+                    max: 255
+        brightness_pct:
             selector:
                 number:
                     min: 0
@@ -18,9 +22,13 @@ dim_zone_relative:
             domain: binary_sensor
             integration: lighting_zone
     fields:
-        amount:
-            required: true
-            default: -10
+        brightness_step:
+            default: -50
+            selector:
+                number:
+                    min: -255
+                    max: 255
+        brightness_step_pct:
             selector:
                 number:
                     min: -100

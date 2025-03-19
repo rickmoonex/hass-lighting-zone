@@ -20,6 +20,7 @@ from homeassistant.const import (
     CONF_UNIQUE_ID,
     EVENT_HOMEASSISTANT_START,
     SERVICE_TURN_ON,
+    STATE_OFF,
     STATE_ON,
     STATE_UNAVAILABLE,
     STATE_UNKNOWN,
@@ -157,6 +158,18 @@ class LightingZone(BinarySensorEntity):
             for entity_id in self.members
             if (state := self.hass.states.get(entity_id)) is not None
         ]
+        on_members = [
+            entity_id
+            for entity_id in self.members
+            if (state := self.hass.states.get(entity_id)) is not None
+            and state.state == STATE_ON
+        ]
+        off_members = [
+            entity_id
+            for entity_id in self.members
+            if (state := self.hass.states.get(entity_id)) is not None
+            and state.state == STATE_OFF
+        ]
 
         # Set group as unavailable if all members are unavailable or missing
         self._attr_available = any(state != STATE_UNAVAILABLE for state in states)
@@ -168,6 +181,11 @@ class LightingZone(BinarySensorEntity):
             self._attr_is_on = None
         else:
             self._attr_is_on = any(state == STATE_ON for state in states)
+            self._attr_extra_state_attributes = {
+                "members": self.members,
+                "members_on": on_members,
+                "members_off": off_members,
+            }
 
     async def dim_zone_absolute(
         self, brightness: int | None = None, brightness_pct: int | None = None

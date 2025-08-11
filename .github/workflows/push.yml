@@ -11,7 +11,7 @@ jobs:
     runs-on: "ubuntu-latest"
     steps:
         - name: "Checkout the repository"
-          uses: "actions/checkout@v4.2.2"
+          uses: "actions/checkout@v5"
 
         - name: "Run hassfest validation"
           uses: "home-assistant/actions/hassfest@master"
@@ -21,7 +21,7 @@ jobs:
     runs-on: "ubuntu-latest"
     steps:
         - name: "Checkout the repository"
-          uses: "actions/checkout@v4.2.2"
+          uses: "actions/checkout@v5"
 
         - name: "Run HACS validation"
           uses: "hacs/action@main"
@@ -39,7 +39,7 @@ jobs:
         id: release
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         if: ${{ steps.release.outputs.release_created }}
       - name: Create zip
         if: ${{ steps.release.outputs.release_created }}
